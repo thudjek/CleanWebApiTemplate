@@ -1,0 +1,44 @@
+version: '3.4'
+
+services:
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    env_file: .env
+    build:
+      context: .
+      dockerfile: src/API/Dockerfile
+    ports:
+      - 5000:80
+      - 5002:443
+#if (SQLServer)
+  sql-server-db:
+    image: ${DOCKER_REGISTRY-}db
+    build:
+      context: ./src/Infrastructure/DockerDb
+      dockerfile: Dockerfile
+    ports:
+      - 1433:1433
+    volumes:
+      - ./src/Infrastructure/DockerDb/VolumeData:/var/opt/data
+#endif
+#if (PostgreSQL)
+  postgres-db:
+    image: postgres
+    environment:
+      POSTGRES_DB: "DatabaseName"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "password"
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+#endif
+  seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 8081:80
+
+volumes:
+    pgdata:

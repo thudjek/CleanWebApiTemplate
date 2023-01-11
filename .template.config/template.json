@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "thudjek",
+  "classifications": [
+    "Web",
+    "WebAPI"
+  ],
+  "name": "Web API Clean Solution Template",
+  "description": "Web API solution template using clean architecture design",
+  "identity": "webapi-clean",
+  "shortName": "webapi-cl",
+  "defaultName": "AppName",
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "sourceName": "CleanWebApiTemplate",
+  "preferNameDirectory": true,
+  "sources": [
+	{
+		"modifiers": [
+			{
+				"exclude": [ ".vs/**/*" ]
+			},
+			{
+				"condition": "(!SQLServer)",
+				"exclude": [ "src/Infrastructure/DockerDb/**/*" ]
+			}
+		]
+	}
+  ],
+  "symbols": {
+	"Database": {
+		"type": "parameter",
+		"datatype": "choice",
+		"choices": [
+			{
+				"choice": "SQL Server",
+				"description": "The app will use SQL Server database"
+			},
+			{
+				"choice": "PostgreSQL",
+				"description": "The app will use PostgreSQL database"
+			}
+		],
+		"defaultValue": "SQL Server",
+		"description": "Select database"
+	},
+	"SQLServer": {
+		"type": "computed",
+		"value": "(Database == \"SQL Server\")"
+	},
+	"PostgreSQL": {
+		"type": "computed",
+		"value": "(Database == \"PostgreSQL\")"
+	}
+  },
+  "SpecialCustomOperations": {
+        "**/*.yml": {
+            "operations": [
+              {
+                "type": "conditional",
+                "configuration": {
+                  "if": [ "#if" ],
+                  "else": [ "#else" ],
+                  "elseif": [ "#elseif" ],
+                  "endif": [ "#endif" ],
+                  "actionableIf": [ "##if" ],
+                  "actionableElse": [ "##else" ],
+                  "actionableElseif": [ "##elseif" ],
+                  "actions": [ "uncomment", "reduceComment" ],
+                  "trim": "true",
+                  "wholeLine": "true",
+                  "evaluator": "C++"
+                }
+              },
+              {
+                "type": "replacement",
+                "configuration": {
+                  "original": "#",
+                  "replacement": "",
+                  "id": "uncomment"
+                }
+              },
+              {
+                "type": "replacement",
+                "configuration": {
+                  "original": "##",
+                  "replacement": "#",
+                  "id": "reduceComment"
+                }
+              }
+            ]
+        },
+		"**/*.csproj": {
+			"operations": [
+			  {
+				"type": "conditional",
+				"configuration": {
+					"actionableIf": [ "<!--#if" ],
+					"actionableElse": [ "#else", "<!--#else" ],
+					"actionableElseif": [ "#elseif", "<!--#elseif" ],
+					"endif": [ "#endif", "<!--#endif" ],
+					"trim" : "true",
+					"wholeLine": "true"
+				}
+			  }
+			]
+		}
+    }
+}
