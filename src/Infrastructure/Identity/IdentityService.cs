@@ -66,13 +66,13 @@ public class IdentityService : IIdentityService
 
         var principal = GetClaimsPrincipalFromAccessToken(accessToken);
         if (principal == null)
-            return Result<TokensDto>.Failure("Access token or refresh token is invalid");
+            return Result<TokensDto>.Failure("Access or refresh token is expired or invalid");
 
         var email = principal.FindFirstValue(ClaimTypes.Email);
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= _dateTimeService.Now)
-            return Result<TokensDto>.Failure();
+            return Result<TokensDto>.Failure("Access or refresh token is expired or invalid");
 
         var tokenDto = await GetTokensForUser(user, principal.Claims.ToList());
 
@@ -285,7 +285,7 @@ public class IdentityService : IIdentityService
         var tokenHandler = new JwtSecurityTokenHandler();
         var principal = tokenHandler.ValidateToken(accessToken, tokenValidationParameters, out SecurityToken securityToken);
         if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-            throw new SecurityTokenException("Invalid access token");
+            return null;
 
         return principal;
     }
