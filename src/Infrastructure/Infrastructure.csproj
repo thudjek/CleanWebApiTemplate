@@ -28,6 +28,7 @@
 
 <!--#if (SQLServer)-->
   <ItemGroup>
+    <Folder Include="Configurations\" />
     <Folder Include="DockerDb\VolumeData\" />
   </ItemGroup>
 <!--#endif-->

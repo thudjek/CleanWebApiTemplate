@@ -3,7 +3,7 @@ using Application.Dtos.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.GetExternalLoginTokens;
-public class GetExternalLoginTokensCommand : ICommand<TokensDto>
+public class GetExternalLoginTokensCommand : IRequest<TokensDto>
 {
     public string Email { get; set; }
     public string Provider { get; set; }

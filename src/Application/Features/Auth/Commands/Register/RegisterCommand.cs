@@ -4,7 +4,7 @@ using Application.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.Register;
-public class RegisterCommand : ICommand<Result>
+public class RegisterCommand : IRequest<Result>
 {
     public string Email { get; set; }
     public string Password { get; set; }

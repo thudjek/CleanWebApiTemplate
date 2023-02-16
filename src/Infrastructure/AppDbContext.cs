@@ -1,6 +1,5 @@
 ﻿using Application.Common.Interfaces;
 using Domain.Common;
-using Domain.Entities;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,8 +13,6 @@ public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>, IAp
     {
 
     }
-
-    public DbSet<TestEntity> TestEntities => Set<TestEntity>();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {

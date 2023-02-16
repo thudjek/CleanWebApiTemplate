@@ -22,6 +22,8 @@ public static class ConfigureServices
             options.UseNpgsql(configuration["Database:ConnectionString"], b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
 #endif
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(configuration["Database:ConnectionString"], b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
         services.AddScoped<IAppDbContext, AppDbContext>();
         services.AddScoped<DatabaseInitializer>();
 

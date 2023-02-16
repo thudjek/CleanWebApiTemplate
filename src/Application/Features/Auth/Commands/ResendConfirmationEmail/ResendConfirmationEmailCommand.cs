@@ -3,7 +3,7 @@ using Application.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ResendConfirmationEmail;
-public class ResendConfirmationEmailCommand : ICommand
+public class ResendConfirmationEmailCommand : IRequest
 {
     public string Email { get; set; }
 }
@@ -18,13 +18,11 @@ public class ResendConfirmationEmailCommandHandler : IRequestHandler<ResendConfi
         _emailService = emailService;
     }
 
-    public async Task<Unit> Handle(ResendConfirmationEmailCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ResendConfirmationEmailCommand request, CancellationToken cancellationToken)
     {
         var tokenResult = await _identityService.GetTokenForIdentityPurpose(request.Email, TokenPurpose.ConfirmEmail);
 
         if (tokenResult.IsSuccess)
             await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);
-
-        return Unit.Value;
     }
 }

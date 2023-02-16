@@ -4,7 +4,7 @@ using Application.Dtos.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.RefreshToken;
-public class RefreshTokenCommand : ICommand<Result<TokensDto>>
+public class RefreshTokenCommand : IRequest<Result<TokensDto>>
 {
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }

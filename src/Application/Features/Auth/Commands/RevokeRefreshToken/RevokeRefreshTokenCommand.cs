@@ -2,7 +2,7 @@
 using MediatR;
 
 namespace Application.Features.Auth.Commands.RevokeRefreshToken;
-public class RevokeRefreshTokenCommand : ICommand<bool>
+public class RevokeRefreshTokenCommand : IRequest<bool>
 {
 }
 

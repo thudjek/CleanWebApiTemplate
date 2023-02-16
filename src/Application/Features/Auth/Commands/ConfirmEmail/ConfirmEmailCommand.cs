@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ConfirmEmail;
-public class ConfirmEmailCommand : ICommand<Result>
+public class ConfirmEmailCommand : IRequest<Result>
 {
     public string Email { get; set; }
     public string Token { get; set; }

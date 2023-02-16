@@ -4,7 +4,7 @@ using Application.Dtos.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ExternalLogin;
-public class ExternalLoginCommand : ICommand<Result<ExternalLoginInfoDto>>
+public class ExternalLoginCommand : IRequest<Result<ExternalLoginInfoDto>>
 {
 }
 

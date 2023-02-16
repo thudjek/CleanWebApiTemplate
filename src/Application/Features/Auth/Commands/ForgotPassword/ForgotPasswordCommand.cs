@@ -3,7 +3,7 @@ using Application.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ForgotPassword;
-public class ForgotPasswordCommand : ICommand
+public class ForgotPasswordCommand : IRequest
 {
     public string Email { get; set; }
 }
@@ -18,12 +18,10 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
         _emailService = emailService;
     }
 
-    public async Task<Unit> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         var tokenResult = await _identityService.GetTokenForIdentityPurpose(request.Email, TokenPurpose.ResetPassword);
         if (tokenResult.IsSuccess)
             await _emailService.SendPasswordResetEmail(request.Email, tokenResult.Value);
-
-        return Unit.Value;
     }
 }

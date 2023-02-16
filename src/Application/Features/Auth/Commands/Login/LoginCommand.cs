@@ -4,7 +4,7 @@ using Application.Dtos.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.Login;
-public class LoginCommand : ICommand<Result<TokensDto>>
+public class LoginCommand : IRequest<Result<TokensDto>>
 {
     public string Email { get; set; }
     public string Password { get; set; }

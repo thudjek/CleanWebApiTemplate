@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ResetPassword;
-public class ResetPasswordCommand : ICommand<Result>
+public class ResetPasswordCommand : IRequest<Result>
 {
     public string Password { get; set; }
     public string ConfirmPassword { get; set; }

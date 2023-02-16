@@ -50,7 +50,7 @@ public static class WebApplicationExtensions
     {
         builder.Host.UseSerilog((ctx, lc) => lc
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ctx.Configuration["Elastic:Uri"]))
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ctx.Configuration["Elastic:Url"]))
             {
                 IndexFormat = $"Test-logs-local-{{0:yyyy.MM.dd}}",
 
