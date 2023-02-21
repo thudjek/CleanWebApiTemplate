@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Infrastructure.Identity;
+using Infrastructure.Interceptors;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,8 @@ public static class ConfigureServices
         {
             options.ApiKey = configuration["SendGrid:ApiKey"];
         });
+
+        services.AddScoped<AuditEntitiesInterceptor>();
 
         services.AddTransient<IIdentityService, IdentityService>();
 

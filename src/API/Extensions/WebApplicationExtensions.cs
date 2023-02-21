@@ -5,7 +5,6 @@ using Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Serilog.Events;
-using Serilog.Sinks.Elasticsearch;
 
 namespace API.Extensions;
 public static class WebApplicationExtensions
@@ -13,7 +12,7 @@ public static class WebApplicationExtensions
     public static WebApplicationBuilder ConfigureBuilderAndServices(this WebApplicationBuilder builder)
     {
         builder.AddSerilog();
-
+        
         builder.Services
             .AddApplicationServices()
             .AddInfrastructureServices(builder.Configuration)
@@ -50,15 +49,6 @@ public static class WebApplicationExtensions
     {
         builder.Host.UseSerilog((ctx, lc) => lc
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(ctx.Configuration["Elastic:Url"]))
-            {
-                IndexFormat = $"Test-logs-local-{{0:yyyy.MM.dd}}",
-
-                AutoRegisterTemplate = true,
-                AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
-                NumberOfShards = 1,
-                NumberOfReplicas = 1
-            })
             .Enrich.FromLogContext()
             .ReadFrom.Configuration(ctx.Configuration));
     }
