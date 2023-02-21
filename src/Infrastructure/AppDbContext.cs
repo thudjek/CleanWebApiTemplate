@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Common;
 using Infrastructure.Identity;
 using Infrastructure.Interceptors;
 using Microsoft.AspNetCore.Identity;
