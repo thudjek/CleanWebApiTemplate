@@ -1,11 +1,14 @@
 ﻿using Application.Common.Interfaces;
+using Application.Extensions;
 using Infrastructure.Identity;
 using Infrastructure.Interceptors;
 using Infrastructure.Services;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SendGrid.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -46,6 +49,9 @@ public static class ConfigureServices
         {
             options.ApiKey = configuration["SendGrid:ApiKey"];
         });
+
+        services.AddSingletonOptionsWithStartupValidation<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.AddSingletonOptionsWithStartupValidation<SendGridSettings>(configuration.GetSection(SendGridSettings.SectionName));
 
         services.AddScoped<AuditEntitiesInterceptor>();
 

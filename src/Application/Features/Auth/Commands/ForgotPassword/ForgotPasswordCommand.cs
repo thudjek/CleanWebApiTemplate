@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Application.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ForgotPassword;
@@ -20,7 +19,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 
     public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var tokenResult = await _identityService.GetTokenForIdentityPurpose(request.Email, TokenPurpose.ResetPassword);
+        var tokenResult = await _identityService.GetPasswordResetToken(request.Email);
         if (tokenResult.IsSuccess)
             await _emailService.SendPasswordResetEmail(request.Email, tokenResult.Value);
     }

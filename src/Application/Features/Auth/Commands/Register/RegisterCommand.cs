@@ -1,6 +1,5 @@
 ﻿using Application.Common;
 using Application.Common.Interfaces;
-using Application.Enums;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.Register;
@@ -25,7 +24,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result>
     {
         var result = await _identityService.Register(request.Email, request.Password);
 
-        var tokenResult = await _identityService.GetTokenForIdentityPurpose(request.Email, TokenPurpose.ConfirmEmail);
+        var tokenResult = await _identityService.GetEmailConfirmationToken(request.Email);
 
         if (tokenResult.IsSuccess)
             await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);

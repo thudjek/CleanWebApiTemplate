@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Infrastructure.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -8,24 +9,24 @@ namespace Infrastructure.Services;
 public class SendGridEmailService : IEmailService
 {
     private readonly ISendGridClient _sendGridClient;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<SendGridEmailService> _logger;
-    public SendGridEmailService(ISendGridClient sendGridClient, IConfiguration configuration, ILogger<SendGridEmailService> logger)
+    private readonly SendGridSettings _sendGridSettings;
+    public SendGridEmailService(ISendGridClient sendGridClient, ILogger<SendGridEmailService> logger, IOptions<SendGridSettings> sendGridSettings)
     {
         _sendGridClient = sendGridClient;
-        _configuration = configuration;
         _logger = logger;
+        _sendGridSettings = sendGridSettings.Value;
     }
 
     public async Task SendConfirmationEmail(string email, string token)
     {
-        var url = _configuration["SendGrid:EmailConfirmationUrl"].Replace("*email*", email).Replace("*token*", token);
+        var url = _sendGridSettings.EmailConfirmationUrl.Replace("*email*", email).Replace("*token*", token);
 
         var sendGridMessage = new SendGridMessage();
-        sendGridMessage.SetFrom(_configuration["SendGrid:From"], _configuration["SendGrid:FromDisplayName"]);
+        sendGridMessage.SetFrom(_sendGridSettings.From, _sendGridSettings.FromDisplayName);
         sendGridMessage.AddTo(email);
-        sendGridMessage.SetSubject("MyNotes Email Confirmation");
-        sendGridMessage.SetTemplateId(_configuration["SendGrid:EmailConfirmationTemplateId"]);
+        sendGridMessage.SetSubject("Email Confirmation");
+        sendGridMessage.SetTemplateId(_sendGridSettings.EmailConfirmationTemplateId);
         sendGridMessage.SetTemplateData(new { confirmationUrl = url });
 
         var emailResponse = await _sendGridClient.SendEmailAsync(sendGridMessage);
@@ -39,13 +40,13 @@ public class SendGridEmailService : IEmailService
 
     public async Task SendPasswordResetEmail(string email, string token)
     {
-        var url = _configuration["SendGrid:PasswordResetUrl"].Replace("*email*", email).Replace("*token*", token);
+        var url = _sendGridSettings.PasswordResetUrl.Replace("*email*", email).Replace("*token*", token);
 
         var sendGridMessage = new SendGridMessage();
-        sendGridMessage.SetFrom(_configuration["SendGrid:From"], _configuration["SendGrid:FromDisplayName"]);
+        sendGridMessage.SetFrom(_sendGridSettings.From, _sendGridSettings.FromDisplayName);
         sendGridMessage.AddTo(email);
-        sendGridMessage.SetSubject("MyNotes Password Reset");
-        sendGridMessage.SetTemplateId(_configuration["SendGrid:PasswordResetTemplateId"]);
+        sendGridMessage.SetSubject("Password Reset");
+        sendGridMessage.SetTemplateId(_sendGridSettings.PasswordResetTemplateId);
         sendGridMessage.SetTemplateData(new { passwordResetUrl = url });
 
         var emailResponse = await _sendGridClient.SendEmailAsync(sendGridMessage);

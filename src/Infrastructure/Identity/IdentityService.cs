@@ -2,9 +2,8 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Dtos.Auth;
-using Application.Enums;
+using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -16,14 +15,22 @@ public class IdentityService : IIdentityService
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly IConfiguration _configuration;
     private readonly IDateTimeService _dateTimeService;
-    public IdentityService(UserManager<User> userManager, IConfiguration configuration, IDateTimeService dateTimeService, SignInManager<User> signInManager)
+    private readonly JwtSettings _jwtSettings;
+    public IdentityService(UserManager<User> userManager, IDateTimeService dateTimeService, SignInManager<User> signInManager, JwtSettings jwtSettings)
     {
         _userManager = userManager;
-        _configuration = configuration;
         _dateTimeService = dateTimeService;
         _signInManager = signInManager;
+        _jwtSettings = jwtSettings;
+    }
+
+
+    public async Task Test()
+    {
+        var accesTokenTime = _jwtSettings.AccessTokenValidityInMinutes;
+        var refreshTokenTime = _jwtSettings.RefreshTokenValidityInDays;
+        await Task.CompletedTask;
     }
 
     public async Task<Result> Register(string email, string password)
@@ -94,25 +101,31 @@ public class IdentityService : IIdentityService
         return true;
     }
 
-    public async Task<Result<string>> GetTokenForIdentityPurpose(string email, TokenPurpose purpose)
+    public async Task<Result<string>> GetEmailConfirmationToken(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
             return Result<string>.Failure("There was an error while processing the request");
 
-        string token = string.Empty;
+        return Result<string>.Success(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+    }
 
-        switch (purpose)
-        {
-            case TokenPurpose.ConfirmEmail:
-                token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                break;
-            case TokenPurpose.ResetPassword:
-                token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                break;
-        }
+    public async Task<Result<string>> GetPasswordResetToken(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+            return Result<string>.Failure("There was an error while processing the request");
 
-        return Result<string>.Success(token);
+        return Result<string>.Success(await _userManager.GeneratePasswordResetTokenAsync(user));
+    }
+
+    public async Task<Result<string>> GetChangeEmailToken(string currentEmail, string newEmail)
+    {
+        var user = await _userManager.FindByEmailAsync(currentEmail);
+        if (user == null)
+            return Result<string>.Failure("There was an error while processing the request");
+
+        return Result<string>.Success(await _userManager.GenerateChangeEmailTokenAsync(user, newEmail));
     }
 
     public async Task<Result> ConfirmEmail(string email, string token)
@@ -233,10 +246,10 @@ public class IdentityService : IIdentityService
         var accessToken = GenerateAccessToken(claims);
         var refreshToken = GenerateRefreshToken();
 
-        _ = int.TryParse(_configuration["JWT:RefreshTokenValidityInDays"], out int refreshTokenValidityInDays);
+        _ = int.TryParse(_jwtSettings.RefreshTokenValidityInDays.ToString(), out int refreshTokenValidityInDays);
 
         user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiryTime = _dateTimeService.Now.AddDays(refreshTokenValidityInDays);
+        user.RefreshTokenExpiryTime = _dateTimeService.Now.AddDays(_jwtSettings.RefreshTokenValidityInDays);
 
         await _userManager.UpdateAsync(user);
 
@@ -249,14 +262,14 @@ public class IdentityService : IIdentityService
 
     private string GenerateAccessToken(List<Claim> claims)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        _ = int.TryParse(_configuration["JWT:AccessTokenValidityInMinutes"], out int tokenValidityInMinutes);
+        _ = int.TryParse(_jwtSettings.AccessTokenValidityInMinutes.ToString(), out int tokenValidityInMinutes); //see if correctly parses int in options, same for refresh token
 
         var token = new JwtSecurityToken(
-            issuer: _configuration["JWT:ValidIssuer"],
-            audience: _configuration["JWT:ValidAudience"],
-            expires: _dateTimeService.Now.AddMinutes(tokenValidityInMinutes),
+            issuer: _jwtSettings.ValidIssuer,
+            audience: _jwtSettings.ValidAudience,
+            expires: _dateTimeService.Now.AddMinutes(_jwtSettings.AccessTokenValidityInMinutes), // see if that works, same for refresh token, maybe validate options
             claims: claims,
             signingCredentials: credentials);
 
@@ -279,7 +292,7 @@ public class IdentityService : IIdentityService
             ValidateIssuer = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret))
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,4 +1,5 @@
 ﻿using API.Extensions;
+using API.Options;
 using Application.Common.Interfaces;
 using Application.Features.Auth.Commands.ConfirmEmail;
 using Application.Features.Auth.Commands.ExternalLogin;
@@ -10,18 +11,28 @@ using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.ResendConfirmationEmail;
 using Application.Features.Auth.Commands.ResetPassword;
 using Application.Features.Auth.Commands.RevokeRefreshToken;
+using Application.Features.Auth.Commands.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace API.Controllers;
 public class AuthController : ApiBaseController
 {
-    private readonly IConfiguration _configuration;
     private readonly IDateTimeService _dateTimeService;
-    public AuthController(IConfiguration configuration, IDateTimeService dateTimeService)
+    private readonly WebAppOptions _webAppOptions;
+    public AuthController(IDateTimeService dateTimeService, IOptions<WebAppOptions> webAppOptions)
     {
-        _configuration = configuration;
         _dateTimeService = dateTimeService;
+        _webAppOptions = webAppOptions.Value;
+    }
+
+    [HttpPost]
+    [Route("test")]
+    public async Task<IActionResult> Test([FromBody] TestQuery query)
+    {
+        await Mediator.Send(query);
+        return Ok();
     }
 
     [HttpPost]
@@ -138,7 +149,7 @@ public class AuthController : ApiBaseController
         if (!result.IsSuccess)
             return BadRequest(result.ToErrorModel());
 
-        return Redirect($"{_configuration["App:ExternalLoginReturnUrl"]}?email={result.Value.Email}&provider={result.Value.Provider}");
+        return Redirect($"{_webAppOptions.ExternalLoginReturnUrl}?email={result.Value.Email}&provider={result.Value.Provider}");
     }
 
     [HttpPost]

@@ -1,7 +1,7 @@
-﻿namespace Infrastructure.Options;
-public class JwtOptions
+﻿namespace Infrastructure.Settings;
+public class JwtSettings
 {
-    private const string SectionName = "JWT";
+    public const string SectionName = "JWT";
 
     public string ValidAudience { get; set; }
     public string ValidIssuer { get; set; }

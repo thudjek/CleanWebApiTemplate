@@ -1,4 +1,5 @@
-﻿using API.Services;
+﻿using API.Options;
+using API.Services;
 using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,6 +11,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddAPIServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<WebAppOptions>(configuration.GetSection(WebAppOptions.SectionName));
+
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
         services.AddControllers();
