@@ -1,6 +1,6 @@
-﻿namespace API.Options;
+﻿namespace API.Settings;
 
-public class WebAppOptions
+public class WebAppSettings
 {
     public const string SectionName = "WebApp";
 

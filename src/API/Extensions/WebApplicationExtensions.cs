@@ -1,8 +1,6 @@
-﻿using Application;
-using Application.Common;
-using Application.Common.Exceptions;
+﻿using API.Middleware;
+using Application;
 using Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
 using Serilog;
 using Serilog.Events;
 
@@ -33,10 +31,9 @@ public static class WebApplicationExtensions
             app.UseHsts();
         }
 
-        app.UseSerilogRequestLogging();
         app.UseHttpsRedirection();
 
-        app.UseExceptionHandling();
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();
@@ -51,41 +48,5 @@ public static class WebApplicationExtensions
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .ReadFrom.Configuration(ctx.Configuration));
-    }
-
-    private static WebApplication UseExceptionHandling(this WebApplication app)
-    {
-        app.UseExceptionHandler(configure =>
-        {
-            configure.Run(async context =>
-            {
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                context.Response.ContentType = "application/json";
-
-                var errorModel = new ErrorModel();
-
-                switch (exceptionHandlerPathFeature?.Error)
-                {
-                    case ValidationException ex:
-                        errorModel.Error = ex.Message;
-                        errorModel.Errors = ex.Errors;
-                        errorModel.ErrorsGrouped = ex.ErrorsGrouped;
-                        context.Response.StatusCode = 400;
-                        break;
-                    case NotFoundException ex:
-                        if (!string.IsNullOrWhiteSpace(ex.UserMessage))
-                            errorModel.Error = ex.UserMessage;
-                        context.Response.StatusCode = 404;
-                        break;
-                    default:
-                        context.Response.StatusCode = 500;
-                        break;
-                }
-
-                await context.Response.WriteAsync(errorModel.ToJson());
-            });
-        });
-
-        return app;
     }
 }

@@ -1,5 +1,5 @@
 ﻿using API.Extensions;
-using API.Options;
+using API.Settings;
 using Application.Common.Interfaces;
 using Application.Features.Auth.Commands.ConfirmEmail;
 using Application.Features.Auth.Commands.ExternalLogin;
@@ -11,27 +11,26 @@ using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.ResendConfirmationEmail;
 using Application.Features.Auth.Commands.ResetPassword;
 using Application.Features.Auth.Commands.RevokeRefreshToken;
-using Application.Features.Auth.Commands.Test;
+using Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace API.Controllers;
 public class AuthController : ApiBaseController
 {
     private readonly IDateTimeService _dateTimeService;
-    private readonly WebAppOptions _webAppOptions;
-    public AuthController(IDateTimeService dateTimeService, IOptions<WebAppOptions> webAppOptions)
+    private readonly WebAppSettings _webAppSettings;
+    public AuthController(IDateTimeService dateTimeService, WebAppSettings webAppSettings)
     {
         _dateTimeService = dateTimeService;
-        _webAppOptions = webAppOptions.Value;
+        _webAppSettings = webAppSettings;
     }
 
-    [HttpPost]
+    [HttpGet]
     [Route("test")]
-    public async Task<IActionResult> Test([FromBody] TestQuery query)
+    public async Task<IActionResult> Test()
     {
-        await Mediator.Send(query);
+        await Mediator.Send(new TestQuery());
         return Ok();
     }
 

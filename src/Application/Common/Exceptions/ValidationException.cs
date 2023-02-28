@@ -1,7 +1,10 @@
-﻿using FluentValidation.Results;
+﻿using Application.Common.Interfaces;
+using FluentValidation.Results;
+using Microsoft.Extensions.Logging;
+using System.Net;
 
 namespace Application.Common.Exceptions;
-public class ValidationException : Exception
+public class ValidationException : Exception, IException
 {
     public ValidationException() : base("One or more validations errors has occurred.")
     {
@@ -11,14 +14,18 @@ public class ValidationException : Exception
     public ValidationException(IEnumerable<ValidationFailure> failures)
         : this()
     {
-        ErrorsGrouped = failures
+        ValidationErrors = failures
             .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
             .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToArray());
 
-        Errors = failures.Select(e => e.ErrorMessage).ToArray();
     }
+    public Dictionary<string, string[]> ValidationErrors { get; }
 
-    public string[] Errors { get; }
-    public Dictionary<string, string[]> ErrorsGrouped { get; }
+    public HttpStatusCode StatusCode { get; } = HttpStatusCode.BadRequest;
 
+    public ErrorModel ToErrorModel() => new(Message, ValidationErrors);
+
+    public void LogException(ILogger logger, string requestName)
+    {
+    }
 }

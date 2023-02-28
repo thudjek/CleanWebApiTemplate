@@ -3,7 +3,6 @@
 namespace Application.Common.Interfaces;
 public interface IIdentityService
 {
-    Task Test();
     Task<Result> Register(string email, string password);
     Task<Result<TokensDto>> Login(string email, string password);
     Task<Result<TokensDto>> RefreshToken(string accessToken, string refreshToken);

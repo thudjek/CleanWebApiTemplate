@@ -1,6 +1,7 @@
-﻿using API.Options;
-using API.Services;
+﻿using API.Services;
+using API.Settings;
 using Application.Common.Interfaces;
+using Application.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -11,7 +12,7 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddAPIServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<WebAppOptions>(configuration.GetSection(WebAppOptions.SectionName));
+        services.AddSingletonOptionsWithStartupValidation<WebAppSettings>(configuration.GetSection(WebAppSettings.SectionName));
 
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
 

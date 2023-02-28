@@ -25,14 +25,6 @@ public class IdentityService : IIdentityService
         _jwtSettings = jwtSettings;
     }
 
-
-    public async Task Test()
-    {
-        var accesTokenTime = _jwtSettings.AccessTokenValidityInMinutes;
-        var refreshTokenTime = _jwtSettings.RefreshTokenValidityInDays;
-        await Task.CompletedTask;
-    }
-
     public async Task<Result> Register(string email, string password)
     {
         if (await _userManager.FindByEmailAsync(email) != null)
@@ -81,9 +73,9 @@ public class IdentityService : IIdentityService
         if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= _dateTimeService.Now)
             return Result<TokensDto>.Failure("Access or refresh token is expired or invalid");
 
-        var tokenDto = await GetTokensForUser(user, principal.Claims.ToList());
+        var tokensDto = await GetTokensForUser(user, principal.Claims.ToList());
 
-        return Result<TokensDto>.Success(tokenDto);
+        return Result<TokensDto>.Success(tokensDto);
     }
 
     public async Task<bool> RevokeRefreshToken(string email)

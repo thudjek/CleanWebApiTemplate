@@ -1,4 +1,5 @@
 ﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -15,7 +16,6 @@ public class UnhandeledExceptionBehavior<TRequest, TResponse> : IPipelineBehavio
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var ignoreLoggingExceptions = new List<Type>() { typeof(ValidationException) };
         var requestName = typeof(TRequest).Name;
 
         try
@@ -26,17 +26,14 @@ public class UnhandeledExceptionBehavior<TRequest, TResponse> : IPipelineBehavio
         {
             var exceptionType = ex.GetType();
 
-            if (!ignoreLoggingExceptions.Contains(exceptionType))
+            if (typeof(IException).IsAssignableFrom(exceptionType))
             {
-                switch (ex)
-                {
-                    case IdentityException identityException:
-                        _logger.LogError(ex, "Unhandeled exception of type {ExceptionType} occurred while processing request {RequestName}. {@Errors}", exceptionType.Name, requestName, new { identityException.Errors });
-                        break;
-                    default:
-                        _logger.LogError(ex, "Unhandeled exception of type {ExceptionType} occurred while processing request {RequestName}.", exceptionType.Name, requestName);
-                        break;
-                }
+                var iex = ex as IException;
+                iex.LogException(_logger, requestName);
+            }
+            else
+            {
+                _logger.LogError(ex, "Unhandeled exception of type {ExceptionType} occurred while processing request {RequestName}.", exceptionType.Name, requestName);
             }
 
             throw;

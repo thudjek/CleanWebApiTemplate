@@ -14,13 +14,16 @@ public class ErrorModel
         Error = error;
     }
 
-    public string Error { get; set; }
+    public ErrorModel(string error, Dictionary<string, string[]> validationErrors)
+    {
+        Error = error;
+        ValidationErrors = validationErrors;
+    }
+
+    public string Error { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string[] Errors { get; set; }
-
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public Dictionary<string, string[]> ErrorsGrouped { get; set; }
+    public Dictionary<string, string[]> ValidationErrors { get; }
 
     public string ToJson()
     {

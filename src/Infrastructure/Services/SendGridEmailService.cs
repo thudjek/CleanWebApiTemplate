@@ -11,11 +11,11 @@ public class SendGridEmailService : IEmailService
     private readonly ISendGridClient _sendGridClient;
     private readonly ILogger<SendGridEmailService> _logger;
     private readonly SendGridSettings _sendGridSettings;
-    public SendGridEmailService(ISendGridClient sendGridClient, ILogger<SendGridEmailService> logger, IOptions<SendGridSettings> sendGridSettings)
+    public SendGridEmailService(ISendGridClient sendGridClient, ILogger<SendGridEmailService> logger, SendGridSettings sendGridSettings)
     {
         _sendGridClient = sendGridClient;
         _logger = logger;
-        _sendGridSettings = sendGridSettings.Value;
+        _sendGridSettings = sendGridSettings;
     }
 
     public async Task SendConfirmationEmail(string email, string token)
