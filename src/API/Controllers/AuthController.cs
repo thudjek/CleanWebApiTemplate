@@ -148,7 +148,7 @@ public class AuthController : ApiBaseController
         if (!result.IsSuccess)
             return BadRequest(result.ToErrorModel());
 
-        return Redirect($"{_webAppOptions.ExternalLoginReturnUrl}?email={result.Value.Email}&provider={result.Value.Provider}");
+        return Redirect($"{_webAppSettings.ExternalLoginReturnUrl}?email={result.Value.Email}&provider={result.Value.Provider}");
     }
 
     [HttpPost]
