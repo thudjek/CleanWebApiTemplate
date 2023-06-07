@@ -22,6 +22,8 @@ public class ResendConfirmationEmailCommandHandler : IRequestHandler<ResendConfi
         var tokenResult = await _identityService.GetEmailConfirmationToken(request.Email);
 
         if (tokenResult.IsSuccess)
+        {
             await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);
+        }
     }
 }

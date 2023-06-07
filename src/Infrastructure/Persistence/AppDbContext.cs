@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace Infrastructure;
+namespace Infrastructure.Persistence;
 public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>, IAppDbContext
 {
     private readonly AuditEntitiesInterceptor _auditEntitiesInterceptor;

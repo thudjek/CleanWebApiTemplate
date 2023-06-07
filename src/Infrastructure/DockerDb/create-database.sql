@@ -1,5 +1,0 @@
-IF DB_ID('DatabaseName') IS NULL
-BEGIN
-CREATE DATABASE [DatabaseName]
-END
-GO

@@ -21,6 +21,8 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
     {
         var tokenResult = await _identityService.GetPasswordResetToken(request.Email);
         if (tokenResult.IsSuccess)
+        {
             await _emailService.SendPasswordResetEmail(request.Email, tokenResult.Value);
+        }
     }
 }

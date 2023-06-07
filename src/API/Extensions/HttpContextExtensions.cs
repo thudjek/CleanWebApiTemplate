@@ -16,7 +16,9 @@ public static class HttpContextExtensions
     public static string GetValueFromCookie(this HttpContext httpContext, string key)
     {
         if (httpContext.Request.Cookies.ContainsKey(key))
+        {
             return httpContext.Request.Cookies[key];
+        }
 
         return string.Empty;
     }

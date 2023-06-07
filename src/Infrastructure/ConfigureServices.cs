@@ -2,13 +2,13 @@
 using Application.Extensions;
 using Infrastructure.Identity;
 using Infrastructure.Interceptors;
+using Infrastructure.Persistence;
 using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using SendGrid.Extensions.DependencyInjection;
 
 namespace Infrastructure;
@@ -26,6 +26,7 @@ public static class ConfigureServices
             options.UseNpgsql(configuration["Database:ConnectionString"], b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 
 #endif
+        
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(configuration["Database:ConnectionString"], b => b.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
         services.AddScoped<IAppDbContext, AppDbContext>();

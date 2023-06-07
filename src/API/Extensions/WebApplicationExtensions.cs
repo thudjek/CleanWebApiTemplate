@@ -1,6 +1,7 @@
 ﻿using API.Middleware;
 using Application;
 using Infrastructure;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
 using Serilog.Events;

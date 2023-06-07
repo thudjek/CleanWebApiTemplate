@@ -29,7 +29,7 @@
 <!--#if (SQLServer)-->
   <ItemGroup>
     <Folder Include="Configurations\" />
-    <Folder Include="DockerDb\VolumeData\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 <!--#endif-->
 </Project>

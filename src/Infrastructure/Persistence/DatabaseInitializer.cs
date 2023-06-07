@@ -1,9 +1,10 @@
-﻿using Infrastructure.Identity;
+﻿using Infrastructure.Exceptions;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure;
+namespace Infrastructure.Persistence;
 public class DatabaseInitializer
 {
     private readonly ILogger<DatabaseInitializer> _logger;
@@ -20,12 +21,21 @@ public class DatabaseInitializer
     {
         try
         {
+            var appliedMigrations = await _dbContext.Database.GetAppliedMigrationsAsync();
             var pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
 
             if (pendingMigrations.Any())
             {
                 await _dbContext.Database.MigrateAsync();
             }
+            else if (appliedMigrations.ToList().Count == 0)
+            {
+                throw new MigrationException("Database cannot start without at least one migration");
+            }
+        }
+        catch (MigrationException)
+        {
+            throw;
         }
         catch (Exception ex)
         {

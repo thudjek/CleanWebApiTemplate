@@ -35,7 +35,9 @@ public class AuthController : ApiBaseController
     {
         var result = await Mediator.Send(command);
         if (result.IsSuccess)
+        {
             return Ok();
+        }
 
         return Conflict(result.ToErrorModel());
     }
@@ -74,7 +76,7 @@ public class AuthController : ApiBaseController
 
     [HttpPost]
     [Route("revoke-refresh-token")]
-    public async Task<IActionResult> RevokeRefreshToken([FromBody] RevokeRefreshTokenCommand command)
+    public async Task<IActionResult> RevokeRefreshToken()
     {
         if (await Mediator.Send(new RevokeRefreshTokenCommand()))
         {
@@ -92,7 +94,9 @@ public class AuthController : ApiBaseController
         var result = await Mediator.Send(command);
 
         if (result.IsSuccess)
+        {
             return Ok();
+        }
 
         return BadRequest(result.ToErrorModel());
     }
@@ -112,7 +116,9 @@ public class AuthController : ApiBaseController
         var result = await Mediator.Send(command);
 
         if (result.IsSuccess)
+        {
             return Ok();
+        }
 
         return BadRequest(result.ToErrorModel());
     }
@@ -141,7 +147,9 @@ public class AuthController : ApiBaseController
         var result = await Mediator.Send(new ExternalLoginCommand());
 
         if (!result.IsSuccess)
+        {
             return BadRequest(result.ToErrorModel());
+        }
 
         return Redirect($"{_webAppSettings.ExternalLoginReturnUrl}?email={result.Value.Email}&provider={result.Value.Provider}");
     }

@@ -28,7 +28,9 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result>
         var tokenResult = await _identityService.GetEmailConfirmationToken(request.Email);
 
         if (tokenResult.IsSuccess)
+        {
             await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);
+        }
 
         return result;
     }

@@ -28,7 +28,10 @@ public class AuditEntitiesInterceptor : SaveChangesInterceptor
 
     private void AuditEntities(DbContext context)
     {
-        if (context == null) return;
+        if (context == null)
+        {
+            return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<BaseEntity>())
         {
