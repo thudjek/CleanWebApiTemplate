@@ -1,6 +1,7 @@
 ﻿using API.Middleware;
 using Application;
 using Infrastructure;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Serilog;
 using Serilog.Events;
 
@@ -23,8 +24,19 @@ public static class WebApplicationExtensions
     {
         if (app.Environment.IsDevelopment())
         {
+            IApiVersionDescriptionProvider provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(options => 
+            {
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", $"{app.Configuration["API:Name"]} {description.GroupName}");
+                }
+
+                options.DefaultModelsExpandDepth(-1);
+            });
+
+            app.InitilazeDatabaseForDevelopment().Wait();
         }
         else
         {
@@ -38,6 +50,18 @@ public static class WebApplicationExtensions
         app.UseAuthentication();
         app.UseAuthorization();
         app.MapControllers();
+
+        return app;
+    }
+
+    private static async Task<WebApplication> InitilazeDatabaseForDevelopment(this WebApplication app)
+    {
+        using (var scope = app.Services.CreateScope())
+        {
+            var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+            await databaseInitializer.InitializeDatabase();
+            await databaseInitializer.SeedAsync();
+        }
 
         return app;
     }

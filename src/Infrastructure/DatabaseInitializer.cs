@@ -21,8 +21,11 @@ public class DatabaseInitializer
         try
         {
             var pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
+
             if (pendingMigrations.Any())
+            {
                 await _dbContext.Database.MigrateAsync();
+            }
         }
         catch (Exception ex)
         {

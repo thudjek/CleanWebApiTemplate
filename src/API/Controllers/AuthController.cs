@@ -11,11 +11,13 @@ using Application.Features.Auth.Commands.Register;
 using Application.Features.Auth.Commands.ResendConfirmationEmail;
 using Application.Features.Auth.Commands.ResetPassword;
 using Application.Features.Auth.Commands.RevokeRefreshToken;
-using Application.Features.Auth.Queries.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
+
+[Route("api/v{version:apiVersion}/auth")]
+[ApiVersion("1.0")]
 public class AuthController : ApiBaseController
 {
     private readonly IDateTimeService _dateTimeService;
@@ -26,16 +28,9 @@ public class AuthController : ApiBaseController
         _webAppSettings = webAppSettings;
     }
 
-    [HttpGet]
-    [Route("test")]
-    public async Task<IActionResult> Test()
-    {
-        await Mediator.Send(new TestQuery());
-        return Ok();
-    }
-
     [HttpPost]
     [Route("register")]
+    [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
     public async Task<IActionResult> Register([FromBody] RegisterCommand command)
     {
         var result = await Mediator.Send(command);

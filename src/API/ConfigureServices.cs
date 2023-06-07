@@ -3,7 +3,9 @@ using API.Settings;
 using Application.Common.Interfaces;
 using Application.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace API;
@@ -18,8 +20,33 @@ public static class ConfigureServices
 
         services.AddControllers();
         services.AddRouting(options => options.LowercaseUrls = true);
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+
+        services.AddApiVersioning(options => 
+        {
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.ReportApiVersions = true;
+        });
+
+        services.AddVersionedApiExplorer(options => 
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
+
+        services.AddSwaggerGen(options => 
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo()
+            {
+                Version = "v1",
+                Title = configuration["API:Name"],
+                Description = "Description for this API"
+            });
+
+            var xmlFileName = $"API.xml";
+            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+        });
+
         services.AddAuthentication(configuration);
 
         return services;
