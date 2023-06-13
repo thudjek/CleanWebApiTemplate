@@ -20,7 +20,7 @@
 	{
 		"modifiers": [
 			{
-				"exclude": [ ".vs/**/*", ".git/**/*" ]
+				"exclude": [ ".vs/**/*", ".git/**/*", "obj/**/*" ]
 			},
 			{
 				"condition": "(!SQLServer)"
