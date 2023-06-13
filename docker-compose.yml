@@ -31,7 +31,7 @@ services:
     ports:
       - ${Database__Port}:5432
     volumes:
-      - ./src/Infrastructure/Persistence/VolumeData:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
 #endif
   seq:
     image: datalust/seq:latest
@@ -39,6 +39,8 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - 8081:80
-
+      
+#if (PostgreSQL)
 volumes:
     pgdata:
+#endif

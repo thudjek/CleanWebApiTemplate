@@ -5,8 +5,8 @@
     "Web",
     "WebAPI"
   ],
-  "name": "Web API Clean Solution Template",
-  "description": "Web API solution template using clean architecture design",
+  "name": ".NET Web API Solution Template",
+  "description": ".NET Web API solution template using clean architecture design",
   "identity": "webapi-clean",
   "shortName": "webapi-cl",
   "defaultName": "AppName",
@@ -23,8 +23,7 @@
 				"exclude": [ ".vs/**/*" ]
 			},
 			{
-				"condition": "(!SQLServer)",
-				"exclude": [ "src/Infrastructure/DockerDb/**/*" ]
+				"condition": "(!SQLServer)"
 			}
 		]
 	}
