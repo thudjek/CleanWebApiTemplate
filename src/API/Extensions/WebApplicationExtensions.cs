@@ -25,6 +25,7 @@ public static class WebApplicationExtensions
     {
 #if PostgreSQL
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 #endif
         if (app.Environment.IsDevelopment())
         {
