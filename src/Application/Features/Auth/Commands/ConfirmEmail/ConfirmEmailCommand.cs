@@ -3,13 +3,13 @@ using Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ConfirmEmail;
-public class ConfirmEmailCommand : IRequest<Result>
+public class ConfirmEmailCommand : IRequest
 {
     public string Email { get; set; }
     public string Token { get; set; }
 }
 
-public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, Result>
+public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand>
 {
     private readonly IIdentityService _identityService;
     public ConfirmEmailCommandHandler(IIdentityService identityService)
@@ -17,8 +17,8 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, R
         _identityService = identityService;
     }
 
-    public async Task<Result> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
-        return await _identityService.ConfirmEmail(request.Email, request.Token);
+        await _identityService.ConfirmEmail(request.Email, request.Token);
     }
 }

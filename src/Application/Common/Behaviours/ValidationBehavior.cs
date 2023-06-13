@@ -3,7 +3,9 @@ using MediatR;
 
 namespace Application.Common.Behaviours;
 
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+    where TRequest : notnull
+    where TResponse : Result
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
@@ -22,14 +24,17 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
                 _validators.Select(v =>
                     v.ValidateAsync(context, cancellationToken)));
 
-            var failures = validationResults
+            var validationErrors = validationResults
                 .Where(r => r.Errors.Any())
                 .SelectMany(r => r.Errors)
-                .ToList();
+                .GroupBy(e => e.PropertyName, e => e.ErrorMessage)
+                .ToDictionary(failureGroup => failureGroup.Key, failureGroup => failureGroup.ToList());
 
-            if (failures.Any())
+            if (validationErrors.Any())
             {
-                throw new ValidationException(failures);
+                var error = new Error(validationErrors);
+                var failResultMethod = typeof(TResponse).GetMethod(nameof(Result.Fail), new[] { typeof(Error) });
+                return failResultMethod.Invoke(null, new object[] { error }) as TResponse;
             }
         }
 

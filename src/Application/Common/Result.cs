@@ -1,75 +1,71 @@
-﻿using System.Net;
-
-namespace Application.Common;
+﻿namespace Application.Common;
 public class Result
 {
-    protected Result(bool isSuccess, HttpStatusCode statusCode)
+    protected Result(bool isSuccess)
     {
         IsSuccess = isSuccess;
-        StatusCode = statusCode;
     }
 
-    protected Result(string error, HttpStatusCode statusCode)
+    protected Result(string errorMessage)
+    {
+        IsSuccess = false;
+        Error = new Error(errorMessage);
+    }
+
+    protected Result(Error error)
     {
         IsSuccess = false;
         Error = error;
-        StatusCode = statusCode;
     }
 
     public bool IsSuccess { get; protected set; }
-    public string Error { get; protected set; } = "Something went wrong, please try again.";
-    public HttpStatusCode StatusCode { get; protected set; }
+    public Error Error { get; protected set; }
 
-    public static Result Success(HttpStatusCode? statusCode = null)
+    public static Result Success()
     {
-        return new Result(true, statusCode ?? HttpStatusCode.OK);
+        return new Result(true);
     }
 
-    public static Result Failure(HttpStatusCode? statusCode = null)
+    public static Result Fail(string errorMessage)
     {
-        return new Result(false, statusCode ?? HttpStatusCode.BadRequest);
+        return new Result(errorMessage);
     }
 
-    public static Result Failure(string error, HttpStatusCode? statusCode = null)
+    public static Result Fail(Error error)
     {
-        return new Result(error, statusCode ?? HttpStatusCode.BadRequest);
-    }
-
-    public ErrorModel ToErrorModel()
-    {
-        return new ErrorModel(Error);
+        return new Result(error);
     }
 }
 
 public class Result<T> : Result where T : class
 {
-    private Result(T value, HttpStatusCode statusCode) : base(true, statusCode)
+    private Result(T value) : base(true)
     {
         Value = value;
     }
 
-    private Result(HttpStatusCode statusCode) : base(false, statusCode)
-    { 
+    private Result(string errorMessage) : base(errorMessage)
+    {
     }
 
-    private Result(string error, HttpStatusCode statusCode) : base(error, statusCode)
+    private Result(Error error) : base(error)
     {
     }
 
     public T Value { get; private set; }
 
-    public static Result<T> Success(T value, HttpStatusCode? statusCode = null)
+    public static Result<T> Success(T value)
     {
-        return new Result<T>(value, statusCode ?? HttpStatusCode.OK);
+        return new Result<T>(value);
     }
 
-    public new static Result<T> Failure(HttpStatusCode? statusCode = null)
+    public new static Result<T> Fail(string errorMessage)
     {
-        return new Result<T>(statusCode ?? HttpStatusCode.BadRequest);
+        return new Result<T>(errorMessage);
     }
 
-    public new static Result<T> Failure(string error, HttpStatusCode? statusCode = null)
+    public new static Result<T> Fail(Error error)
     {
-        return new Result<T>(error, statusCode ?? HttpStatusCode.BadRequest);
+        return new Result<T>(error);
     }
 }

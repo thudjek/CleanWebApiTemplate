@@ -9,14 +9,14 @@ services:
       dockerfile: src/API/Dockerfile
     ports:
       - 5000:80
-      - 5002:443
+      - 5001:443
 #if (SQLServer)
   sql-server-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - 1433:1433
+      - ${Database__Port}:1433
     environment:
-      SA_PASSWORD: "Password1!"
+      SA_PASSWORD: ${Database__Password}
       ACCEPT_EULA: "Y"
     volumes:
       - ./src/Infrastructure/Persistence/VolumeData:/var/opt/data
@@ -25,11 +25,11 @@ services:
   postgres-db:
     image: postgres
     environment:
-      POSTGRES_DB: "DatabaseName"
-      POSTGRES_USER: "user"
-      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: ${Database__DbName}
+      POSTGRES_USER: ${Database__User}
+      POSTGRES_PASSWORD: ${Database__Password}
     ports:
-      - 5432:5432
+      - ${Database__Port}:5432
     volumes:
       - ./src/Infrastructure/Persistence/VolumeData:/var/lib/postgresql/data
 #endif

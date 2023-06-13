@@ -1,14 +1,13 @@
-﻿using Application.Common;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Dtos.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Commands.ExternalLogin;
-public class ExternalLoginCommand : IRequest<Result<ExternalLoginInfoDto>>
+public class ExternalLoginCommand : IRequest<ExternalLoginInfoDto>
 {
 }
 
-public class ExternalLoginCommandHandler : IRequestHandler<ExternalLoginCommand, Result<ExternalLoginInfoDto>>
+public class ExternalLoginCommandHandler : IRequestHandler<ExternalLoginCommand, ExternalLoginInfoDto>
 {
     private readonly IIdentityService _identityService;
     public ExternalLoginCommandHandler(IIdentityService identityService)
@@ -16,7 +15,7 @@ public class ExternalLoginCommandHandler : IRequestHandler<ExternalLoginCommand,
         _identityService = identityService;
     }
 
-    public async Task<Result<ExternalLoginInfoDto>> Handle(ExternalLoginCommand request, CancellationToken cancellationToken)
+    public async Task<ExternalLoginInfoDto> Handle(ExternalLoginCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.ExternalLogin();
     }

@@ -19,11 +19,7 @@ public class ResendConfirmationEmailCommandHandler : IRequestHandler<ResendConfi
 
     public async Task Handle(ResendConfirmationEmailCommand request, CancellationToken cancellationToken)
     {
-        var tokenResult = await _identityService.GetEmailConfirmationToken(request.Email);
-
-        if (tokenResult.IsSuccess)
-        {
-            await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);
-        }
+        var token = await _identityService.GetEmailConfirmationToken(request.Email);
+        await _emailService.SendConfirmationEmail(request.Email, token);
     }
 }

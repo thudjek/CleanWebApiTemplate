@@ -44,11 +44,11 @@ public class DatabaseInitializer
         }
     }
 
-    public async Task SeedAsync()
+    public async Task SeedDatabase()
     {
         try
         {
-            await TrySeedAsync();
+            await SeedUsers();
         }
         catch (Exception ex)
         {
@@ -57,7 +57,7 @@ public class DatabaseInitializer
         }
     }
 
-    private async Task TrySeedAsync()
+    private async Task SeedUsers()
     {
         var user = new User()
         {

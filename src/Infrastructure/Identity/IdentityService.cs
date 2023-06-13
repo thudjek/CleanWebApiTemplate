@@ -2,8 +2,10 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Dtos.Auth;
+using Infrastructure.Extensions;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -17,47 +19,49 @@ public class IdentityService : IIdentityService
     private readonly SignInManager<User> _signInManager;
     private readonly IDateTimeService _dateTimeService;
     private readonly JwtSettings _jwtSettings;
-    public IdentityService(UserManager<User> userManager, IDateTimeService dateTimeService, SignInManager<User> signInManager, JwtSettings jwtSettings)
+    private readonly ILogger<IdentityService> _logger;
+    public IdentityService(UserManager<User> userManager, IDateTimeService dateTimeService, SignInManager<User> signInManager, JwtSettings jwtSettings, ILogger<IdentityService> logger)
     {
         _userManager = userManager;
         _dateTimeService = dateTimeService;
         _signInManager = signInManager;
         _jwtSettings = jwtSettings;
+        _logger = logger;
     }
 
-    public async Task<Result> Register(string email, string password)
+    public async Task<int> Register(string email, string password)
     {
-        if (await _userManager.FindByEmailAsync(email) != null)
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is not null)
         {
-            return Result.Failure("User with that email already exists");
+            _logger.LogWarning("Register failed: email address already in use by user {UserId}", user.Id);
+        }
+        else
+        {
+            user = new User()
+            {
+                Email = email,
+                UserName = email
+            };
+
+            var registerResult = await _userManager.CreateAsync(user, password);
+            registerResult.ThrowIfNotSuccessul("Error during registration");
         }
 
-        var user = new User()
-        {
-            Email = email,
-            UserName = email
-        };
-
-        var registerResult = await _userManager.CreateAsync(user, password);
-        if (registerResult != IdentityResult.Success)
-        {
-            throw new IdentityException(registerResult.Errors.Select(e => e.Description));
-        }
-
-        return Result.Success();
+        return user.Id;
     }
 
     public async Task<Result<TokensDto>> Login(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null || !await _userManager.CheckPasswordAsync(user, password))
+        if (user is null || !await _userManager.CheckPasswordAsync(user, password))
         {
-            return Result<TokensDto>.Failure("Wrong email or password");
+            return Result<TokensDto>.Fail("Wrong email or password");
         }
 
         if (!user.EmailConfirmed)
         {
-            return Result<TokensDto>.Failure("Email is not confirmed");
+            return Result<TokensDto>.Fail("Email is not confirmed");
         }
 
         var claims = GetUserClaims(user);
@@ -70,21 +74,21 @@ public class IdentityService : IIdentityService
     {
         if (string.IsNullOrWhiteSpace(accessToken) || string.IsNullOrWhiteSpace(refreshToken))
         {
-            return Result<TokensDto>.Failure();
+            return Result<TokensDto>.Fail("Access or refresh token is expired or invalid");
         }
 
         var principal = GetClaimsPrincipalFromAccessToken(accessToken);
-        if (principal == null)
+        if (principal is null)
         {
-            return Result<TokensDto>.Failure("Access or refresh token is expired or invalid");
+            return Result<TokensDto>.Fail("Access or refresh token is expired or invalid");
         }
 
         var email = principal.FindFirstValue(ClaimTypes.Email);
         var user = await _userManager.FindByEmailAsync(email);
 
-        if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= _dateTimeService.Now)
+        if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= _dateTimeService.Now)
         {
-            return Result<TokensDto>.Failure("Access or refresh token is expired or invalid");
+            return Result<TokensDto>.Fail("Access or refresh token is expired or invalid");
         }
 
         var tokensDto = await GetTokensForUser(user, principal.Claims.ToList());
@@ -92,150 +96,118 @@ public class IdentityService : IIdentityService
         return Result<TokensDto>.Success(tokensDto);
     }
 
-    public async Task<bool> RevokeRefreshToken(string email)
+    public async Task RevokeRefreshToken(int userId)
     {
-        if (!string.IsNullOrWhiteSpace(email))
+        if (userId != 0)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user is null)
             {
-                return false;
+                _logger.LogWarning("Revoking refresh token failed: User {UserId} is null", userId);
+                return;
             }
 
             user.RefreshToken = null;
             await _userManager.UpdateAsync(user);
         }
-        
-        return true;
     }
 
-    public async Task<Result<string>> GetEmailConfirmationToken(string email)
+    public async Task<string> GetEmailConfirmationToken(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user is null)
         {
-            return Result<string>.Failure("There was an error while processing the request");
+            throw new IdentityException("Cannot get email confirmation token: User is null");
         }
 
-        return Result<string>.Success(await _userManager.GenerateEmailConfirmationTokenAsync(user));
+        return await _userManager.GenerateEmailConfirmationTokenAsync(user);
     }
 
-    public async Task<Result<string>> GetPasswordResetToken(string email)
+    public async Task<string> GetPasswordResetToken(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user is null)
         {
-            return Result<string>.Failure("There was an error while processing the request");
+            throw new IdentityException("Cannot get password reset token: User is null");
         }
 
-        return Result<string>.Success(await _userManager.GeneratePasswordResetTokenAsync(user));
+        return await _userManager.GeneratePasswordResetTokenAsync(user);
     }
 
-    public async Task<Result<string>> GetChangeEmailToken(string currentEmail, string newEmail)
+    public async Task<string> GetChangeEmailToken(string currentEmail, string newEmail)
     {
         var user = await _userManager.FindByEmailAsync(currentEmail);
-        if (user == null)
+        if (user is null)
         {
-            return Result<string>.Failure("There was an error while processing the request");
+            throw new IdentityException("Cannot get change email token: User is null");
         }
 
-        return Result<string>.Success(await _userManager.GenerateChangeEmailTokenAsync(user, newEmail));
+        return await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
     }
 
-    public async Task<Result> ConfirmEmail(string email, string token)
+    public async Task ConfirmEmail(string email, string token)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user is null)
         {
-            return Result.Failure("There was an error while processing the request");
+            throw new IdentityException("Cannot confirm email: User is null");
         }
 
         var confirmEmailResult = await _userManager.ConfirmEmailAsync(user, token);
-        if (confirmEmailResult.Succeeded)
-        {
-            return Result.Success();
-        }
-        else
-        {
-            return Result.Failure();
-        }
+        confirmEmailResult.ThrowIfNotSuccessul("Error during email confirmation");
     }
 
-    public async Task<Result> ResetPassword(string email, string token, string password)
+    public async Task ResetPassword(string email, string token, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
-        if (user == null)
+        if (user is null)
         {
-            return Result.Failure("There was an error while processing the request");
+            throw new IdentityException("Cannot reset password: User is null");
         }
 
         var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, password);
-
-        if (resetPasswordResult.Succeeded)
-        {
-            return Result.Success();
-        }
-        else
-        {
-            return Result.Failure();
-        }
+        resetPasswordResult.ThrowIfNotSuccessul("Error during password reset");
     }
 
-    public async Task<Result<ExternalLoginInfoDto>> ExternalLogin()
+    public async Task<ExternalLoginInfoDto> ExternalLogin()
     {
         var info = await _signInManager.GetExternalLoginInfoAsync();
         if (!info.Principal.Claims.Any())
         {
-            return Result<ExternalLoginInfoDto>.Failure("Error while trying to login");
+            throw new IdentityException("Error while trying to get external login info: no claims in principal");
         }
 
         var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
         var email = info.Principal.FindFirstValue(ClaimTypes.Email);
         var user = await _userManager.FindByEmailAsync(email);
         var claims = GetUserClaims(user);
 
         if (signInResult.Succeeded)
         {
-            var tokenDto = await GetTokensForUser(user, claims);
-            await _userManager.SetAuthenticationTokenAsync(user, info.LoginProvider, "AccessToken", tokenDto.AccessToken);
-            await _userManager.SetAuthenticationTokenAsync(user, info.LoginProvider, "RefreshToken", tokenDto.RefreshToken);
-
-            return Result<ExternalLoginInfoDto>.Success(new ExternalLoginInfoDto() { Email = user.Email, Provider = info.LoginProvider });
+            await SetTokensForExternalLogin(user, claims, info.LoginProvider);
+            return new ExternalLoginInfoDto() { Email = user.Email, Provider = info.LoginProvider };
         }
 
-        if (!string.IsNullOrWhiteSpace(email))
+        if (user is null)
         {
-            if (user == null)
+            user = new User()
             {
-                user = new User()
-                {
-                    Email = email,
-                    UserName = email
-                };
+                Email = email,
+                UserName = email
+            };
 
-                var createUserResult = await _userManager.CreateAsync(user);
-                if (createUserResult != IdentityResult.Success)
-                {
-                    throw new IdentityException(createUserResult.Errors.Select(e => e.Description));
-                }
-            }
-
-            var addLoginResult = await _userManager.AddLoginAsync(user, info);
-            if (addLoginResult != IdentityResult.Success)
-            {
-                throw new IdentityException(addLoginResult.Errors.Select(e => e.Description));
-            }
-
-            await _signInManager.SignInAsync(user, false);
-
-            var tokenDto = await GetTokensForUser(user, claims);
-            await _userManager.SetAuthenticationTokenAsync(user, info.LoginProvider, "AccessToken", tokenDto.AccessToken);
-            await _userManager.SetAuthenticationTokenAsync(user, info.LoginProvider, "RefreshToken", tokenDto.RefreshToken);
-
-            return Result<ExternalLoginInfoDto>.Success(new ExternalLoginInfoDto() { Email = user.Email, Provider = info.LoginProvider });
+            var createUserResult = await _userManager.CreateAsync(user);
+            createUserResult.ThrowIfNotSuccessul("Error while trying to create user for external login");
         }
 
-        return Result<ExternalLoginInfoDto>.Failure("Error while trying to login");
+        var addLoginResult = await _userManager.AddLoginAsync(user, info);
+        addLoginResult.ThrowIfNotSuccessul($"Error while trying to add external login for a user {user.Id}");
+
+        await _signInManager.SignInAsync(user, false);
+
+        await SetTokensForExternalLogin(user, claims, info.LoginProvider);
+        return new ExternalLoginInfoDto() { Email = user.Email, Provider = info.LoginProvider };
     }
 
     public async Task<TokensDto> GetExternalLoginTokens(string email, string provider)
@@ -245,7 +217,7 @@ public class IdentityService : IIdentityService
         if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(provider))
         {
             var user = await _userManager.FindByEmailAsync(email);
-            if (user != null)
+            if (user is not null)
             {
                 tokenDto.AccessToken = await _userManager.GetAuthenticationTokenAsync(user, provider, "AccessToken");
                 tokenDto.RefreshToken = await _userManager.GetAuthenticationTokenAsync(user, provider, "RefreshToken");
@@ -262,13 +234,20 @@ public class IdentityService : IIdentityService
     {
         var claims = new List<Claim>();
 
-        if (user != null)
+        if (user is not null)
         {
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Email, user.Email));
         }
 
         return claims;
+    }
+
+    private async Task SetTokensForExternalLogin(User user, List<Claim> claims, string loginProvider)
+    {
+        var tokenDto = await GetTokensForUser(user, claims);
+        await _userManager.SetAuthenticationTokenAsync(user, loginProvider, "AccessToken", tokenDto.AccessToken);
+        await _userManager.SetAuthenticationTokenAsync(user, loginProvider, "RefreshToken", tokenDto.RefreshToken);
     }
 
     private async Task<TokensDto> GetTokensForUser(User user, List<Claim> claims)

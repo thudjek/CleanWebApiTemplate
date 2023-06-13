@@ -23,15 +23,14 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result>
 
     public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var result = await _identityService.Register(request.Email, request.Password);
+        var userId = await _identityService.Register(request.Email, request.Password);
 
-        var tokenResult = await _identityService.GetEmailConfirmationToken(request.Email);
-
-        if (tokenResult.IsSuccess)
+        if (userId != 0)
         {
-            await _emailService.SendConfirmationEmail(request.Email, tokenResult.Value);
+            var token = await _identityService.GetEmailConfirmationToken(request.Email);
+            await _emailService.SendConfirmationEmail(request.Email, token);
         }
 
-        return result;
+        return Result.Success();
     }
 }

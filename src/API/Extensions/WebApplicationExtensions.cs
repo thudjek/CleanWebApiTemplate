@@ -61,7 +61,7 @@ public static class WebApplicationExtensions
         {
             var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
             await databaseInitializer.InitializeDatabase();
-            await databaseInitializer.SeedAsync();
+            await databaseInitializer.SeedDatabase();
         }
 
         return app;

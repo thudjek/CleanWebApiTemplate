@@ -19,10 +19,7 @@ public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordComman
 
     public async Task Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
-        var tokenResult = await _identityService.GetPasswordResetToken(request.Email);
-        if (tokenResult.IsSuccess)
-        {
-            await _emailService.SendPasswordResetEmail(request.Email, tokenResult.Value);
-        }
+        var token = await _identityService.GetPasswordResetToken(request.Email);
+        await _emailService.SendPasswordResetEmail(request.Email, token);
     }
 }

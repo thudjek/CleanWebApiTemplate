@@ -1,5 +1,4 @@
-﻿using Application.Common.Interfaces;
-using Application.Common;
+﻿using System.Text.Json;
 
 namespace API.Middleware;
 
@@ -18,20 +17,13 @@ public class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             context.Response.ContentType = "application/json";
-
-            var errorModel = new ErrorModel();
             context.Response.StatusCode = 500;
-
-            if (ex is IException exception)
-            {
-                errorModel = exception.ToErrorModel();
-                context.Response.StatusCode = (int)exception.StatusCode;
-            }
-
-            await context.Response.WriteAsync(errorModel.ToJson());
+            await context.Response.WriteAsync(JsonSerializer.Serialize(
+                new { error = "Something went wrong, please try again." }, 
+                new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
         }
     }
 }
