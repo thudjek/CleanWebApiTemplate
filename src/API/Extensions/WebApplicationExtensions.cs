@@ -23,6 +23,9 @@ public static class WebApplicationExtensions
 
     public static WebApplication ConfigureApplication(this WebApplication app)
     {
+#if PostgreSQL
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+#endif
         if (app.Environment.IsDevelopment())
         {
             IApiVersionDescriptionProvider provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
