@@ -9,7 +9,7 @@ $nugetUrl = "https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe"
 
 
 Write-Output "Copy template"
-Copy-Item -Path "./src/CleanWebApiTemplate" -Recurse -Destination "$contentPath/CleanWebApiTemplate" -Container
+Copy-Item -Path "./" -Recurse -Destination "$contentPath/CleanWebApiTemplate" -Container
 
 Write-Output "Copy nuspec"
 Copy-item -Force -Recurse "CleanWebApiTemplate.nuspec" -Destination $rootOutputPath
