@@ -24,6 +24,7 @@
 			".template.config/**/*",
 			"**/.git/**",
 			"*.nuspec",
+			"*.ps1",
 			".vs/**/*",
 			"**/*.filelist",
 			"**/*.user",
