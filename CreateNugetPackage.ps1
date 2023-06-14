@@ -1,7 +1,7 @@
 Set-StrictMode -Version Latest
 
 $templateFolderName = "CleanWebApiTemplate_Nuget"
-$rootOutputPath = "C:/$templateName"
+$rootOutputPath = "C:/$templateFolderName"
 $contentPath = "$rootOutputPath/content"
 $nugetExePath = "$rootOutputPath/nuget.exe"
 $nugetOutputPath =  "$rootOutputPath/nupkg"
