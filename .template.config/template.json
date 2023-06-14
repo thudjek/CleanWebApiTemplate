@@ -5,7 +5,7 @@
     "Web",
     "WebAPI"
   ],
-  "name": ".NET Web API Solution Template",
+  "name": ".NET Clean Web API",
   "description": ".NET Web API solution template using clean architecture design",
   "identity": "webapi-clean",
   "shortName": "webapi-cl",
@@ -28,7 +28,10 @@
 			".vs/**/*",
 			"**/*.filelist",
 			"**/*.user",
-			"**/*.lock.json"
+			"**/*.lock.json",
+			"_rels/**/*",
+			"package/**/*",
+			"[Content_Types].xml"
 		],
 		"modifiers": [
 			{

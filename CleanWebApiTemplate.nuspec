@@ -4,7 +4,7 @@
     <id>TH.CleanWebApiTemplate</id>
     <version>1.0.0</version>
     <description>.NET Web API solution template using clean architecture design</description>
-    <title>.NET Web API Solution Template</title>
+    <title>.NET Clean Web API</title>
 	<authors>thudjek</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
