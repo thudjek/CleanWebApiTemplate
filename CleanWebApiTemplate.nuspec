@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>TH.CleanWebApiTemplate</id>
+    <version>1.0.0</version>
+    <description>.NET Web API solution template using clean architecture design</description>
+    <title>.NET Web API Solution Template</title>
+	<authors>thudjek</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <tags>.NET Web WebApi C#</tags>
+    <language>en-US</language>
+	<packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="**" exclude="**\bin\**\*;**\obj\**\*;**\*.user;**\*.lock.json;_rels\**\*;package\**\*;**\.vs\**\*;**\.git\**\*;**\LICENSE;EADME.md;" />
+  </files>
+</package>
