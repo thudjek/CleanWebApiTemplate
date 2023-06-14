@@ -1,18 +1,15 @@
 Set-StrictMode -Version Latest
 
-$templateFolderName = "CleanWebApiTemplate_Nuget"
-$rootOutputPath = "C:/NugetPackages/$templateFolderName"
-$contentPath = "$rootOutputPath/content"
+$projectName = "CleanWebApiTemplate"
+$rootOutputPath = "C:/NugetPackages/$($projectName)_Nuget"
+$copyToPath = "$rootOutputPath/content/$projectName"
 $nugetExePath = "$rootOutputPath/nuget.exe"
 $nugetOutputPath =  "$rootOutputPath/nupkg"
-$nugetUrl = "https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe"
+$nugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 
 
-Write-Output "Copy template"
-Copy-Item -Path "./" -Recurse -Destination "$contentPath/CleanWebApiTemplate" -Container
-
-Write-Output "Copy nuspec"
-Copy-item -Force -Recurse "CleanWebApiTemplate.nuspec" -Destination $rootOutputPath
+Write-Output "Copy template content"
+Copy-Item -Path "./" -Recurse -Destination "$copyToPath" -Container
 
 if(-not(Test-Path -Path $nugetExePath -PathType Leaf))
 {
@@ -25,7 +22,7 @@ else
 }
 
 Write-Output "Pack nuget"
-$cmdArgList = @( "pack", "$rootOutputPath\CleanWebApiTemplate.nuspec",
+$cmdArgList = @( "pack", "$copyToPath\CleanWebApiTemplate.nuspec",
 				 "-OutputDirectory", "$nugetOutputPath", "-NoDefaultExcludes")
 				 
 & $nugetExePath $cmdArgList
