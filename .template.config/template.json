@@ -9,7 +9,6 @@
   "description": ".NET Web API solution template using clean architecture design",
   "identity": "webapi-clean",
   "shortName": "webapi-cl",
-  "defaultName": "AppName",
   "tags": {
     "language": "C#",
     "type": "solution"
@@ -18,10 +17,19 @@
   "preferNameDirectory": true,
   "sources": [
 	{
+		"exclude": [
+			"README.md",
+			"**/[Bb]in/**",
+			"**/[Oo]bj/**",
+			".template.config/**/*",
+			"**/.git/**",
+			"*.nuspec",
+			".vs/**/*",
+			"**/*.filelist",
+			"**/*.user",
+			"**/*.lock.json"
+		]
 		"modifiers": [
-			{
-				"exclude": [ ".vs/**/*", ".git/**/*", "obj/**/*" ]
-			},
 			{
 				"condition": "(!SQLServer)"
 			}

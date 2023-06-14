@@ -10,11 +10,13 @@
     <license type="expression">MIT</license>
     <tags>.NET Web WebApi C#</tags>
     <language>en-US</language>
+	<readme>README.md</readme>
 	<packageTypes>
       <packageType name="Template" />
     </packageTypes>
   </metadata>
   <files>
-    <file src="**" exclude="**\bin\**\*;**\obj\**\*;**\*.user;**\*.lock.json;_rels\**\*;package\**\*;**\.vs\**\*;**\.git\**\*;**\LICENSE;EADME.md;" />
+	<file src="README.md" />
+    <file src=".\**" exclude="**\bin\**\*;**\obj\**\*;**\*.user;**\*.lock.json;_rels\**\*;package\**\*;**\.vs\**\*;**\.git\**\*;**\.github\**\*;**\LICENSE;**\README.md;" />
   </files>
 </package>
