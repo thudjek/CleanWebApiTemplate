@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>TH.CleanWebApiTemplate</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 	<title>.NET Clean Web API</title>
     <description>.NET Web API solution template using clean architecture design</description>
 	<authors>thudjek</authors>
