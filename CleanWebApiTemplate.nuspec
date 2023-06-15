@@ -3,9 +3,11 @@
   <metadata>
     <id>TH.CleanWebApiTemplate</id>
     <version>1.0.0</version>
+	<title>.NET Clean Web API</title>
     <description>.NET Web API solution template using clean architecture design</description>
-    <title>.NET Clean Web API</title>
 	<authors>thudjek</authors>
+	<projectUrl>https://github.com/thudjek/CleanWebApiTemplate</projectUrl>
+    <repository type="git" url="https://github.com/thudjek/CleanWebApiTemplate.git" branch="main" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <tags>.NET Web WebApi C#</tags>
