@@ -30,14 +30,11 @@
 			"**/*.user",
 			"**/*.lock.json",
 			"_rels/**/*",
-			"package/**/*"
+			"package/**/*",
+			"*.xml"
+			
 		],
 		"modifiers": [
-			{
-				"exclude": [
-					"[Content_Types].xml"
-				]
-			},
 			{
 				"condition": "(!SQLServer)"
 			}

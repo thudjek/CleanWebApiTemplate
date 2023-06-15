@@ -39,6 +39,7 @@ After project is created you can modify code, environment variables, configurati
 <br />
 
 * .env file with some default environment variables is provided, make sure you first uncomment variables for chosen database (this is so database docker container can run)
+	- if you will be using .env file for storing settings like secrets and keys, you'll wanna put .env file in .gitignore
 * Set "Infrastructure" project as startup project and open package console manager and in console manager also set "Infrastructure" as deafult project
 * In console manager run `add-migration "{NameOfFirstMigration}" -args "{DatabaseConnectionString}}"` to create first migration (models are picked up from EntityFramework and Identity configurations)
     - first migration is needed so database container can pick it up and run
