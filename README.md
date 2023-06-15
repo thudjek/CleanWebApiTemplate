@@ -51,7 +51,7 @@ Now you can run project which should show swagger page when it starts.
 ## Troubleshooting
 <br />
 
-Sometimes some error occurres which prevent api/containers to start. It can be because of missing first migration, environment variables beeing incorrect, docker caching or any other reason.
+Sometimes some errors might occurr which prevent api/containers to start. It can be because of missing first migration, environment variables beeing incorrect, docker caching or any other reason.
 
 I found that most of the time some (or most likely all) of the next things help:
 * delete and restart docker containers
