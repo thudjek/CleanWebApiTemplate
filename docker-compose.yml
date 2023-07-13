@@ -6,7 +6,7 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: src/AppName.REST/Dockerfile
+      dockerfile: src/CleanWebApiTemplate.REST/Dockerfile
     ports:
       - 5000:80
       - 5001:443
@@ -19,7 +19,7 @@ services:
       SA_PASSWORD: ${Database__Password}
       ACCEPT_EULA: "Y"
     volumes:
-      - ./src/AppName.Infrastructure/Persistence/VolumeData:/var/opt/data
+      - ./src/CleanWebApiTemplate.Infrastructure/Persistence/VolumeData:/var/opt/data
 #endif
 #if (PostgreSQL)
   postgres-db:
