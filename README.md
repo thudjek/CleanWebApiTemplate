@@ -1,6 +1,6 @@
 # Clean .NET Web API Solution
 
-This is .NET Web API solution template with Clean Architecture design with out of the box authentication features.
+This is .NET Web API solution template with Clean Architecture design which includes out of the box authentication features using .NET Identity Framework.
 
 Solution is by clean arthitecture design divided into:
 
@@ -8,9 +8,9 @@ Solution is by clean arthitecture design divided into:
 * Domain Layer
 * Application Layer
 * Infrastructure Layer
-* API (Presentation) Layer
+* REST API (Presentation) Layer
 
-Docker compose is included to run containers locally. Containers are running API itself, local database (SQL Server or PostreSQL) and SEQ for logging.
+Docker compose is included to run containers. Containers are running API itself, local database (SQL Server or PostreSQL) and SEQ for logging.
 
 ## Getting started
 
@@ -22,7 +22,7 @@ Run `dotnet new install TH.CleanWebApiTemplate` to install the solution template
 ### Create new project with Visual Studio 2022
 
 
-* Open Visual Studio and in "Create New Project" window search for ".NET Clean Web API" (should be marked as "new" if just installed)
+* Open Visual Studio and in "Create New Project" window search for ".NET Clean Web API" (should be marked as "new" if template was just installed)
 * Give your project a name and make sure "Place solution and project in the same directory" is checked
 * In next window select database you want to use (SQL Server or PostgreSQL)
     - Template conditionaly pulls code, nuget packages and configuration based on your choice
@@ -32,10 +32,10 @@ Run `dotnet new install TH.CleanWebApiTemplate` to install the solution template
 
 * In folder in which you want to create your project run `dotnet run webapi-cl`
     - add `-o "{ProjectName}"` parameter to name your project
-    - add `--database` or `-db` parameter with either "SQL Server" or "PostgreSQL" value to chose databse (SQL Server is default if no database parameter is provided)
+    - add `--database` or `-db` parameter with either "SQL Server" or "PostgreSQL" value to chose database (SQL Server is default if no database parameter is provided)
 
 ### Setup before running
-After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default project up and running.
+After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default solution up and running.
 
 
 * .env file with some default environment variables is provided, make sure you first uncomment variables for chosen database (this is so database docker container can run)
