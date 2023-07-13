@@ -39,11 +39,11 @@ public static class ConfigureServices
             options.SwaggerDoc("v1", new OpenApiInfo()
             {
                 Version = "v1",
-                Title = configuration["API:Name"],
-                Description = "Description for this API"
+                Title = configuration["General:ProjectName"],
+                Description = "Description for this REST API"
             });
 
-            var xmlFileName = $"API.xml";
+            var xmlFileName = $"AppName.REST.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
         });
 

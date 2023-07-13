@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   api:
-    image: ${DOCKER_REGISTRY-}REST
+    image: ${DOCKER_REGISTRY-}rest
     env_file: .env
     build:
       context: .

@@ -34,6 +34,9 @@ Run `dotnet new install TH.CleanWebApiTemplate` to install the solution template
     - add `-o "{ProjectName}"` parameter to name your project
     - add `--database` or `-db` parameter with either "SQL Server" or "PostgreSQL" value to chose database (SQL Server is default if no database parameter is provided)
 
+
+Projects/Namespaces in solution will be named based on name you entered (through Visual Studio or through -o parameter in CLI). Project names are of format {NameYouEntered}.Domain, {NameYouEntered}.Application etc.
+
 ### Setup before running
 After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default solution up and running.
 
@@ -55,5 +58,5 @@ Sometimes some errors might occurr which prevent api/containers to start. It can
 
 I found that most of the time some (or most likely all) of the next things help:
 * delete and restart docker containers
-* close project and delete .vs, bin and obj folders
+* close solution and delete .vs, bin and obj folders
 * delete docker volumes used by this project and allow them to be recreated
