@@ -2,11 +2,11 @@ version: '3.4'
 
 services:
   api:
-    image: ${DOCKER_REGISTRY-}api
+    image: ${DOCKER_REGISTRY-}REST
     env_file: .env
     build:
       context: .
-      dockerfile: src/API/Dockerfile
+      dockerfile: src/AppName.REST/Dockerfile
     ports:
       - 5000:80
       - 5001:443
@@ -19,7 +19,7 @@ services:
       SA_PASSWORD: ${Database__Password}
       ACCEPT_EULA: "Y"
     volumes:
-      - ./src/Infrastructure/Persistence/VolumeData:/var/opt/data
+      - ./src/AppName.Infrastructure/Persistence/VolumeData:/var/opt/data
 #endif
 #if (PostgreSQL)
   postgres-db:

@@ -5,13 +5,13 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0C9C52C7-2137-4FD7-AA0F-7B8913DA68DE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "src\Domain\Domain.csproj", "{15D0A1E2-4D74-449F-AD10-6B531B461815}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppName.Domain", "src\AppName.Domain\AppName.Domain.csproj", "{15D0A1E2-4D74-449F-AD10-6B531B461815}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "src\Application\Application.csproj", "{9BF62DB0-B4F9-43AF-9703-72923EA827E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppName.Application", "src\AppName.Application\AppName.Application.csproj", "{9BF62DB0-B4F9-43AF-9703-72923EA827E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{7171AC46-C102-42CD-856C-27DC095E3B75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppName.Infrastructure", "src\AppName.Infrastructure\AppName.Infrastructure.csproj", "{7171AC46-C102-42CD-856C-27DC095E3B75}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "src\API\API.csproj", "{DE07205A-3F29-4F6C-AEB2-F6D5F3A34111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppName.REST", "src\AppName.REST\AppName.REST.csproj", "{DE07205A-3F29-4F6C-AEB2-F6D5F3A34111}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E1F6140D-9E12-4630-BA3A-F327566F1E0C}"
 EndProject
