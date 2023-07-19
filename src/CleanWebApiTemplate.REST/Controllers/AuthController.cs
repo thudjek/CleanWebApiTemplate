@@ -1,6 +1,5 @@
 ﻿using CleanWebApiTemplate.API.Extensions;
 using CleanWebApiTemplate.API.Settings;
-using CleanWebApiTemplate.Application.Common;
 using CleanWebApiTemplate.Application.Common.Interfaces;
 using CleanWebApiTemplate.Application.Features.Auth.Commands.ConfirmEmail;
 using CleanWebApiTemplate.Application.Features.Auth.Commands.ExternalLogin;
@@ -53,7 +52,6 @@ public class AuthController : ApiBaseController
             HttpContext.AddCookieToResponse("refreshToken", result.Value.RefreshToken, true, _dateTimeService.Now.AddYears(1));
             return Ok(new { result.Value.AccessToken });
         }
-            
 
         return BadRequest(result.Error);
     }

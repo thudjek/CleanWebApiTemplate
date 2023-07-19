@@ -41,8 +41,6 @@ Projects/Namespaces in solution will be named based on name you entered (through
 After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default solution up and running.
 
 
-* .env file with some default environment variables is provided, make sure you first uncomment variables for chosen database (this is so database docker container can run)
-	- if you will be using .env file for storing settings like secrets and keys, you'll wanna put .env file in .gitignore
 * Set "Infrastructure" project as startup project and open package console manager and in console manager also set "Infrastructure" as deafult project
 * In console manager run `add-migration "{NameOfFirstMigration}" -args "{DatabaseConnectionString}}"` to create first migration (models are picked up from EntityFramework and Identity configurations)
     - first migration is needed so database container can pick it up and run
@@ -50,6 +48,9 @@ After project is created you can modify code, environment variables, configurati
 * Set "docker-compose" project as startup project
 
 Now you can run project which should show swagger page when it starts.
+
+
+NOTE: .env file with some default environment variables/settings is provided with the template, if you plan to use it for storing sensitive information like secrets, api keys etc. for your local environment, you'll wanna put .env file in .gitignore
 
 ## Troubleshooting
 
