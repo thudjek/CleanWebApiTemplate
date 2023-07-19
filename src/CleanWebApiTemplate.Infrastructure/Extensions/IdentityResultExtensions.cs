@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 namespace CleanWebApiTemplate.Infrastructure.Extensions;
 public static class IdentityResultExtensions
 {
-    public static void ThrowIfNotSuccessul(this IdentityResult identityResult, string message = null)
+    public static void ThrowIfNotSuccessful(this IdentityResult identityResult, string message = null)
     {
         if (!identityResult.Succeeded)
         {

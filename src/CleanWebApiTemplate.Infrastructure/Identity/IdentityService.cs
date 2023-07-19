@@ -45,7 +45,7 @@ public class IdentityService : IIdentityService
             };
 
             var registerResult = await _userManager.CreateAsync(user, password);
-            registerResult.ThrowIfNotSuccessul("Error during registration");
+            registerResult.ThrowIfNotSuccessful("Error during registration");
         }
 
         return user.Id;
@@ -154,7 +154,7 @@ public class IdentityService : IIdentityService
         }
 
         var confirmEmailResult = await _userManager.ConfirmEmailAsync(user, token);
-        confirmEmailResult.ThrowIfNotSuccessul("Error during email confirmation");
+        confirmEmailResult.ThrowIfNotSuccessful("Error during email confirmation");
     }
 
     public async Task ResetPassword(string email, string token, string password)
@@ -166,7 +166,7 @@ public class IdentityService : IIdentityService
         }
 
         var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, password);
-        resetPasswordResult.ThrowIfNotSuccessul("Error during password reset");
+        resetPasswordResult.ThrowIfNotSuccessful("Error during password reset");
     }
 
     public async Task<ExternalLoginInfoDto> ExternalLogin()
@@ -198,11 +198,11 @@ public class IdentityService : IIdentityService
             };
 
             var createUserResult = await _userManager.CreateAsync(user);
-            createUserResult.ThrowIfNotSuccessul("Error while trying to create user for external login");
+            createUserResult.ThrowIfNotSuccessful("Error while trying to create user for external login");
         }
 
         var addLoginResult = await _userManager.AddLoginAsync(user, info);
-        addLoginResult.ThrowIfNotSuccessul($"Error while trying to add external login for a user {user.Id}");
+        addLoginResult.ThrowIfNotSuccessful($"Error while trying to add external login for a user {user.Id}");
 
         await _signInManager.SignInAsync(user, false);
 
