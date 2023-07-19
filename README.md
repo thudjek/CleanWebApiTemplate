@@ -32,7 +32,7 @@ Run `dotnet new install TH.CleanWebApiTemplate` to install the solution template
 
 * In folder in which you want to create your project run `dotnet run webapi-cl`
     - add `-o "{ProjectName}"` parameter to name your project
-    - add `--database` or `-db` parameter with either "SQL Server" or "PostgreSQL" value to chose database (SQL Server is default if no database parameter is provided)
+    - add `--database` or `-db` parameter with either "SQL Server" or "PostgreSQL" value to choose database (SQL Server is default if no database parameter is provided)
 
 
 Projects/Namespaces in solution will be named based on name you entered (through Visual Studio or through -o parameter in CLI). Project names are of format {NameYouEntered}.Domain, {NameYouEntered}.Application etc.
