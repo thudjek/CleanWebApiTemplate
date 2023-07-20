@@ -6,7 +6,7 @@
     <ProjectGuid>e1f6140d-9e12-4630-ba3a-f327566f1e0c</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>api</DockerServiceName>
+    <DockerServiceName>rest</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
