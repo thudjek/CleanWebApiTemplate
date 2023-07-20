@@ -26,7 +26,7 @@ public class IdentityException : Exception, IException
 
     public IEnumerable<string> Errors { get; }
 
-    public void LogException(ILogger logger, string requestName)
+    public void LogException(ILogger logger, string requestName) 
     {
         if (Errors is not null && Errors.Any())
         {
@@ -36,5 +36,5 @@ public class IdentityException : Exception, IException
         {
             logger.LogError(this, "Unhandeled exception of type IdentityException occurred while processing request {RequestName}.", requestName);
         }
-    }
+    }   
 }

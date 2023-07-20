@@ -21,20 +21,20 @@ public static class ConfigureServices
         services.AddControllers();
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddApiVersioning(options =>
+        services.AddApiVersioning(options => 
         {
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.ReportApiVersions = true;
         });
 
-        services.AddVersionedApiExplorer(options =>
+        services.AddVersionedApiExplorer(options => 
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
         });
 
-        services.AddSwaggerGen(options =>
+        services.AddSwaggerGen(options => 
         {
             options.SwaggerDoc("v1", new OpenApiInfo()
             {

@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace CleanWebApiTemplate.Infrastructure.Interceptors;
 public class AuditEntitiesInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IDateTimeService _dateTimeService;
+	private readonly ICurrentUserService _currentUserService;
+	private readonly IDateTimeService _dateTimeService;
     public AuditEntitiesInterceptor(ICurrentUserService currentUserService, IDateTimeService dateTimeService)
     {
         _currentUserService = currentUserService;

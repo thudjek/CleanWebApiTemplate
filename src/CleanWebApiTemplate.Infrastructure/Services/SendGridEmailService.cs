@@ -1,6 +1,7 @@
 ﻿using CleanWebApiTemplate.Application.Common.Interfaces;
 using CleanWebApiTemplate.Infrastructure.Settings;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
