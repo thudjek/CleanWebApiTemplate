@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanWebApiTemplate.Application.Common.Behaviours;
 
-public class UnhandeledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+public class UnhandeledExceptionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly ILogger<UnhandeledExceptionBehavior<TRequest, TResponse>> _logger;
@@ -24,7 +24,7 @@ public class UnhandeledExceptionBehavior<TRequest, TResponse> : IPipelineBehavio
         {
             var requestName = typeof(TRequest).Name;
             var exceptionType = ex.GetType();
-            
+
             if (typeof(IException).IsAssignableFrom(exceptionType))
             {
                 var iex = ex as IException;
