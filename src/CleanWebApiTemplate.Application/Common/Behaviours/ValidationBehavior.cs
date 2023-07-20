@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CleanWebApiTemplate.Application.Common.Behaviours;
 
-public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> 
+public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
     where TResponse : Result
 {

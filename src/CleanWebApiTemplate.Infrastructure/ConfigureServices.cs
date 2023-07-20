@@ -6,7 +6,6 @@ using CleanWebApiTemplate.Infrastructure.Persistence;
 using CleanWebApiTemplate.Infrastructure.Services;
 using CleanWebApiTemplate.Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SendGrid.Extensions.DependencyInjection;

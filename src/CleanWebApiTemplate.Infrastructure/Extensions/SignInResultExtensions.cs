@@ -30,7 +30,7 @@ public static class SignInResultExtensions
             }
 
             throw new IdentityException(errors);
-            
+
         }
     }
 }

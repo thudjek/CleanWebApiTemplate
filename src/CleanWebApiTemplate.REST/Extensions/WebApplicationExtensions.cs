@@ -12,7 +12,7 @@ public static class WebApplicationExtensions
     public static WebApplicationBuilder ConfigureBuilderAndServices(this WebApplicationBuilder builder)
     {
         builder.AddSerilog();
-        
+
         builder.Services
             .AddApplicationServices()
             .AddInfrastructureServices(builder.Configuration)
@@ -31,7 +31,7 @@ public static class WebApplicationExtensions
         {
             IApiVersionDescriptionProvider provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
             app.UseSwagger();
-            app.UseSwaggerUI(options => 
+            app.UseSwaggerUI(options =>
             {
                 foreach (var description in provider.ApiVersionDescriptions)
                 {
