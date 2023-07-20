@@ -41,13 +41,12 @@ Projects/Namespaces in solution will be named based on name you entered (through
 After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default solution up and running.
 
 
-* Set "Infrastructure" project as startup project and open package console manager and in console manager also set "Infrastructure" as deafult project
-* In console manager run `add-migration "{NameOfFirstMigration}" -args "{DatabaseConnectionString}}"` to create first migration (models are picked up from EntityFramework and Identity configurations)
+* Add first migration to the project by opening package manager console and running `add-migration "{NameOfFirstMigration}" -Project {ProjectName}.Infrastructure -StartupProject {ProjectName}.Infrastructure -args "{DatabaseConnectionString}}"` 
     - first migration is needed so database container can pick it up and run
     - migrations are created in "Infrastructure/Migrations" folder
 * Set "docker-compose" project as startup project
 
-Now you can run project which should show swagger page when it starts.
+Now you can run project using docker-compose and it should open swagger page when it starts.
 
 
 NOTE: .env file with some default environment variables/settings is provided with the template, if you plan to use it for storing sensitive information like secrets, api keys etc. for your local environment, you'll wanna put .env file in .gitignore
@@ -57,7 +56,7 @@ NOTE: .env file with some default environment variables/settings is provided wit
 
 Sometimes some errors might occurr which prevent api/containers to start. It can be because of missing first migration, environment variables beeing incorrect, docker caching or any other reason.
 
-I found that most of the time some (or most likely all) of the next things help:
+I found that most of the time some (or most likely all) of the following things help:
 * delete and restart docker containers
 * close solution and delete .vs, bin and obj folders
 * delete docker volumes used by this project and allow them to be recreated
