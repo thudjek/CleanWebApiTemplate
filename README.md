@@ -15,7 +15,7 @@ Docker compose is included to run containers. Containers are running API itself,
 ## Getting started
 
 
-Prerequisites: .NET 7 SDK or higher and Docker installed.
+Prerequisites: .NET 8 SDK or higher and Docker installed (you can still install this template with lower version of .NET but you have to manually edit .csproj files and downgrade specific packages that are installed by default)
 
 Run `dotnet new install TH.CleanWebApiTemplate` to install the solution template.
 
@@ -41,7 +41,7 @@ Projects/Namespaces in solution will be named based on name you entered (through
 After project is created you can modify code, environment variables, configuration etc. to your needs, but this setup is just to get default solution up and running.
 
 
-* Add first migration to the project by opening package manager console and running `add-migration "{NameOfFirstMigration}" -Project {ProjectName}.Infrastructure -StartupProject {ProjectName}.Infrastructure -args "{DatabaseConnectionString}}"` 
+* Add first migration to the project by opening package manager console and running `add-migration "{NameOfFirstMigration}" -Project {ProjectName}.Infrastructure -StartupProject {ProjectName}.Infrastructure -args "{DatabaseConnectionString}"` 
     - first migration is needed so database container can pick it up and run
     - migrations are created in "Infrastructure/Migrations" folder
 * Set "docker-compose" project as startup project
