@@ -1,4 +1,5 @@
-﻿using CleanWebApiTemplate.API.Middleware;
+﻿using Asp.Versioning.ApiExplorer;
+using CleanWebApiTemplate.API.Middleware;
 using CleanWebApiTemplate.Application;
 using CleanWebApiTemplate.Infrastructure;
 using CleanWebApiTemplate.Infrastructure.Persistence;

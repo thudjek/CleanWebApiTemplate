@@ -1,4 +1,5 @@
-﻿using CleanWebApiTemplate.API.Services;
+﻿using Asp.Versioning;
+using CleanWebApiTemplate.API.Services;
 using CleanWebApiTemplate.API.Settings;
 using CleanWebApiTemplate.Application.Common.Interfaces;
 using CleanWebApiTemplate.Application.Extensions;
@@ -26,9 +27,8 @@ public static class ConfigureServices
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.DefaultApiVersion = new ApiVersion(1, 0);
             options.ReportApiVersions = true;
-        });
-
-        services.AddVersionedApiExplorer(options =>
+        })
+        .AddApiExplorer(options => 
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;

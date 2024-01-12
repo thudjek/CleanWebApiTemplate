@@ -1,4 +1,5 @@
-﻿using CleanWebApiTemplate.API.Extensions;
+﻿using Asp.Versioning;
+using CleanWebApiTemplate.API.Extensions;
 using CleanWebApiTemplate.API.Settings;
 using CleanWebApiTemplate.Application.Common.Interfaces;
 using CleanWebApiTemplate.Application.Features.Auth.Commands.ConfirmEmail;
