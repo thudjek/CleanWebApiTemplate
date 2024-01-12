@@ -6,6 +6,7 @@
 	<title>.NET Clean Web API</title>
     <description>.NET Web API solution template using clean architecture design</description>
 	<authors>thudjek</authors>
+	<copyright>Copyright (c) thudjek 2023.</copyright>
 	<projectUrl>https://github.com/thudjek/CleanWebApiTemplate</projectUrl>
     <repository type="git" url="https://github.com/thudjek/CleanWebApiTemplate.git" branch="main" />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
